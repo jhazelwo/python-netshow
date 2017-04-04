@@ -151,7 +151,10 @@ class NetShow(object):
         """
         if len(address) > 16:
             ## http://stackoverflow.com/questions/41940483
-            address = address.decode('hex')
+            try:
+                address = address.decode('hex')   # Python2
+            except AttributeError:
+                address = bytes.fromhex(address)  # Python3
             address = struct.unpack('>IIII', address)
             address = struct.pack('@IIII', *address)
             address = socket.inet_ntop(socket.AF_INET6, address).lower()

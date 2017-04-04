@@ -47,7 +47,7 @@ class TestSearchDictValues(TestCase):
         method = instance.search_dict_values
         self.assertRaises(RegexError, method, '*', INPUT[0])
         self.assertFalse(method('pattern', INPUT[0]))
-        self.assertEquals(method('tcp', INPUT[0]), INPUT[0])
+        self.assertEqual(method('tcp', INPUT[0]), INPUT[0])
         self.assertTrue(method('tcp', INPUT[0]))
         self.assertTrue(method('tcp|.*sshd$', INPUT[0]))
         self.assertTrue(method('0.0.0.0', INPUT[0]))
@@ -73,7 +73,7 @@ class TestFilter(TestCase):
         self.assertTrue(method([]))
         self.assertFalse(method(['nope', 'cant|match|this', 80]))
         self.assertTrue(method(['54101','172.28.142.138', 'tcp|22']))
-        self.assertEquals(instance.results, [INPUT[1]])
+        self.assertEqual(instance.results, [INPUT[1]])
 
     def test_filter_int(self):
         instance = NetShow()
@@ -95,8 +95,8 @@ class TestLintToDict(TestCase):
         subject = method(line, 'tcp')
         subject['pid'] = ''
         subject['program'] = ''
-        self.assertNotEquals(subject, INPUT[1])
-        self.assertEquals(subject, i)
+        self.assertNotEqual(subject, INPUT[1])
+        self.assertEqual(subject, i)
 
     def test_line_to_dict_udp6(self):
         instance = NetShow()
@@ -109,8 +109,8 @@ class TestLintToDict(TestCase):
         subject = method(line, 'udp6')
         subject['pid'] = ''
         subject['program'] = ''
-        self.assertNotEquals(subject, INPUT[1])
-        self.assertEquals(subject, i)
+        self.assertNotEqual(subject, INPUT[1])
+        self.assertEqual(subject, i)
 
 class TestProcToDict(TestCase):
     """ def proc_to_dict(self, protocol): """
@@ -128,37 +128,37 @@ class TestConvertIP(TestCase):
     def test_convert_ip(self):
         instance = NetShow()
         method = instance._convert_ip
-        self.assertEquals(method('00000000000000000000000000000000'), '::')
-        self.assertEquals(method('000080FE00000000FF565002BD69B1FE'), 'fe80::250:56ff:feb1:69bd')
-        self.assertEquals(method('00000000'), '0.0.0.0')
-        self.assertEquals(method('8A8E1CAC'), '172.28.142.138')
+        self.assertEqual(method('00000000000000000000000000000000'), '::')
+        self.assertEqual(method('000080FE00000000FF565002BD69B1FE'), 'fe80::250:56ff:feb1:69bd')
+        self.assertEqual(method('00000000'), '0.0.0.0')
+        self.assertEqual(method('8A8E1CAC'), '172.28.142.138')
 
 class TestHex2Dec(TestCase):
     """ def _hex2dec(self, this): """
     def test_hex2dec(self):
         instance = NetShow()
         method = instance._hex2dec
-        self.assertEquals(method('00'), '0')
-        self.assertEquals(method('007B'), '123')
-        self.assertEquals(method('0016'), '22')
+        self.assertEqual(method('00'), '0')
+        self.assertEqual(method('007B'), '123')
+        self.assertEqual(method('0016'), '22')
 
 class TestRemoveEmpty(TestCase):
     """ def _remove_empty(self, this): """
     def test_remove_empty(self):
         instance = NetShow()
         method = instance._remove_empty
-        self.assertNotEquals(method(['bob', ' ', 'pat', '']), ['bob', 'pat'])
-        self.assertEquals(method(['bob', '', 'pat', '']), ['bob', 'pat'])
+        self.assertNotEqual(method(['bob', ' ', 'pat', '']), ['bob', 'pat'])
+        self.assertEqual(method(['bob', '', 'pat', '']), ['bob', 'pat'])
 
 class TestConvertIPPort(TestCase):
     """ def _convert_ip_port(self, array): """
     def test_convert_ip_port(self):
         instance = NetShow()
         method = instance._convert_ip_port
-        self.assertNotEquals(method('8A8E1CAC:007B'), ('fe80::250:56ff:feb1:69bd', '22'))
-        self.assertNotEquals(method('000080FE00000000FF565002BD69B1FE:0016'), ('172.28.142.138', '123'))
-        self.assertEquals(method('000080FE00000000FF565002BD69B1FE:0016'), ('fe80::250:56ff:feb1:69bd', '22'))
-        self.assertEquals(method('8A8E1CAC:007B'), ('172.28.142.138', '123'))
+        self.assertNotEqual(method('8A8E1CAC:007B'), ('fe80::250:56ff:feb1:69bd', '22'))
+        self.assertNotEqual(method('000080FE00000000FF565002BD69B1FE:0016'), ('172.28.142.138', '123'))
+        self.assertEqual(method('000080FE00000000FF565002BD69B1FE:0016'), ('fe80::250:56ff:feb1:69bd', '22'))
+        self.assertEqual(method('8A8E1CAC:007B'), ('172.28.142.138', '123'))
 
 
 
