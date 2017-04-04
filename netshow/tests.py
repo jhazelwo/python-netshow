@@ -1,26 +1,8 @@
 #!/usr/bin/env python
 """ -*- coding: utf-8 -*-
-Unit tests for python-netshow.
-Testing saves lives!
+Unit tests for python-netshow. (Testing saves lives!)
 
-Hint:
 # PYTHONPATH=`pwd` python tests.py
-
-Not a lot of test methods for unittest in Python 2.6.6 :(
->>> dir(unittest.TestCase)
-['__call__', '__class__', '__delattr__', '__dict__', '__doc__', '__eq__',
-'__format__', '__getattribute__', '__hash__', '__init__', '__module__',
-'__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__',
-'__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_exc_info',
-'assertAlmostEqual', 'assertAlmostEquals', 'assertEqual', 'assertEquals',
-'assertFalse', 'assertNotAlmostEqual', 'assertNotAlmostEquals',
-'assertNotEqual', 'assertNotEquals', 'assertRaises', 'assertTrue', 'assert_',
-'countTestCases', 'debug', 'defaultTestResult', 'fail', 'failIf',
-'failIfAlmostEqual', 'failIfEqual', 'failUnless', 'failUnlessAlmostEqual',
-'failUnlessEqual', 'failUnlessRaises', 'failureException', 'id', 'run',
-'setUp', 'shortDescription', 'tearDown']
->>>
-
 """
 from unittest import TestCase, main
 from netshow import NetShow, RegexError
@@ -107,16 +89,28 @@ class TestLintToDict(TestCase):
         instance.contents = INPUT
         method = instance.line_to_dict
         line = '   0: 00000000:0016 00000000:0000 0A 00000000:00000000 00:00000000 00000000     0        0 9479 1 ffff880139ba5480 99 0 0 10 -1'
-        self.assertNotEquals(method(line, 'tcp'), INPUT[1])
-        self.assertEquals(method(line, 'tcp'), INPUT[0])
+        i = INPUT[0].copy()
+        i['pid'] = ''
+        i['program'] = ''
+        subject = method(line, 'tcp')
+        subject['pid'] = ''
+        subject['program'] = ''
+        self.assertNotEquals(subject, INPUT[1])
+        self.assertEquals(subject, i)
 
     def test_line_to_dict_udp6(self):
         instance = NetShow()
         instance.contents = INPUT
         method = instance.line_to_dict
         line = '  16: 000080FE00000000FF565002BD69B1FE:007B 00000000000000000000000000000000:0000 07 00000000:00000000 00:00000000 00000000     0        0 9523 2 ffff880139b50400 0'
-        self.assertNotEquals(method(line, 'udp6'), INPUT[1])
-        self.assertEquals(method(line, 'udp6'), INPUT[6])
+        i = INPUT[6].copy()
+        i['pid'] = ''
+        i['program'] = ''
+        subject = method(line, 'udp6')
+        subject['pid'] = ''
+        subject['program'] = ''
+        self.assertNotEquals(subject, INPUT[1])
+        self.assertEquals(subject, i)
 
 class TestProcToDict(TestCase):
     """ def proc_to_dict(self, protocol): """
