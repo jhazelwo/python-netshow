@@ -16,7 +16,17 @@ import json
 from pprint import pprint
 
 
-class NetStack(object):
+class QuietError(Exception):
+    # All who inherit me shall not traceback, but be spoken of cleanly
+    pass
+
+
+class RegexError(QuietError):
+    # Invalid regex pattern
+    pass
+
+
+class NetShow(object):
     """ Object to hold data about network connections. """
     def __init__(self):
         """ . """
@@ -54,6 +64,7 @@ class NetStack(object):
 
     def search_dict_values(self, pattern, d):
         """ . """
+        pattern = str(pattern)
         is_regex = False
         special_charters = ['^', '*', '?', '[', '(', '|', '$']
         for has in special_charters:
@@ -65,8 +76,7 @@ class NetStack(object):
                     if re.match(pattern, v):
                         return d
                 except Exception as e:
-                    print('invalid regex: {0}'.format(e))
-                    exit(2)
+                    raise RegexError(e)
         else:
             if pattern in d.values():
                 return d
@@ -226,8 +236,17 @@ class NetStack(object):
         return s.rstrip('\n')
 
 
+def quiet_hook(kind, message, traceback):
+    if QuietError in kind.__bases__:
+        print('{0}: {1}'.format(kind.__name__, message))  # Only print Error Type and Message
+    else:
+        sys.__excepthook__(kind, message, traceback)  # Print Error Type, Message and Traceback
+
+sys.excepthook = quiet_hook
+
+
 if __name__ == '__main__':
-    netstat = NetStack()
+    netstat = NetShow()
     args = sys.argv[1:]
     if '--help' in args or '-h' in args:
         print(netstat.usage())
